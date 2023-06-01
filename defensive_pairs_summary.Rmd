@@ -1,0 +1,178 @@
+---
+title: "Who Are the Best Defensemen Pairs in the National Hockey League?"
+author: "Michael Vandervelden"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+
+```{r, warning=FALSE, message=FALSE}
+# Load packages 
+
+library(tidyverse)
+library(dplyr)
+library(effectsize)
+library(ggplot2)
+```
+
+# Data Acquisiton 
+
+This project uses NHL all-strengths defensemen and defensive pair data from the 2021-2022 regular season. The datasets, in CSV format, can be found at:
+https://www.naturalstattrick.com/playerteams.php?stdoi=oi
+
+https://www.naturalstattrick.com/playerteams.php?stdoi=std
+
+https://www.naturalstattrick.com/pairings.php
+
+
+# Introduction
+
+To win hockey games, it's of vital importance to keep the puck out of the net. Consequently, defensemen, and by extension the pair of defensemen that comprise part of a team's five skaters,
+are some of the most valuable players on the ice. Having even one defensive stalwart on a team's
+roster can have a significant impact on that team's success. However, defensemen in the National Hockey League are often considered the best simply due to their impressive statistics on offense. The Norris 
+Trophy, awarded annually to the league's single best defenseman, is essentially an honour for the defender with the most goals and assists. Since the role of the defensive pair is to defend their team's goal, I wanted to analytically rank the best pairs in the league, based on both defensive
+and offensive metrics, while adjusting for influential factors such as zone start percentage. 
+
+# Methods and techniques
+
+I wanted to determine which players made up the best defensive pairs, or pairings, in the National Hockey League. To do this, I resolved to assign a numerical score to each individual defenseman, with the sum of any two defensemen being the aggregate score for a given pairing. This scoring, as well as any data cleaning and restructuring, was done in Microsoft SQL Server. 
+
+Each score is a simple sum of various offensive and defensive statistics, where desirable statistics are positive and undesirable statistics are negative, including Corsi-for %, High Danger Chances for %, Goals-for %, Expected Goals against, Expected goals for %, Giveaways per 60 mins, High Danger Chances for per 60 mins, Shots Against per 60 mins, Shots Blocked per 60 mins, Goals for per 60 mins, Takeaways per 60 mins, Shots for per 60 mins, and Goals against per 60 mins. 
+
+Since players had their metrics impacted, sometimes significantly, by high defensive zone start percentages, the impact of these high percentages had to be quantified and adjusted for. 
+
+
+
+# Impact of a high defensive zone start percentage
+
+There are four different types of starts a given player can have: Offensive zone starts, in which the player is deployed for a face-off behind the opposing teams blue-line; Defensive zone starts, in which the player is deployed for a face-off behind his own blue-line; Neutral zone starts, in which the player is deployed for a face-off between the two blue-lines; and finally on-the-fly starts, where a player comes on to the ice as the play is still going on. Though neutral zone and on-the-fly starts comprise the majority of a player's starts, it is the percentage of offensive and defensive zone starts
+that best reflects how a player is deliberately deployed by their coach. 
+
+Before I began my analysis, I suspected that a player with a high percentage of starts in the defensive zone would have their respective metrics skewed negatively. This is because they are inevitably spending more time in their own zone defending while the opposing team has possession of the puck. To confirm or refute my suspicions, I created a simple linear regression model for each of the metrics I planned on using in my rankings, with defensive zone start percentage as the sole explanatory variable.
+
+
+
+
+``` {r, warning=FALSE, message=FALSE}
+
+# Read in data
+defensemen_data = read_csv("new_defensemen_data.csv")
+
+```
+
+# Plots
+
+``` {r, figures-side, fig.show="hold", out.width="50%", warning=FALSE, message=FALSE}
+
+ggplot(data=defensemen_data, mapping=aes(Def_Zone_Start_Pct, CF1)) + geom_point(color='red', alpha=0.5) + geom_smooth(method='lm', se=FALSE, color='green') + labs(title="Corsi-for % vs. Defensive zone start %", x = "Defensive zone start %", y = "Corsi-for %")
+
+ggplot(data=defensemen_data, mapping=aes(Def_Zone_Start_Pct, HDCA_60)) + geom_point(color='red', alpha=0.5) + geom_smooth(method='lm', se=FALSE, color='green') + labs(title="High-danger chances against per 60 mins. vs. Defensive zone start %", x = "Defensive zone start %", y = "High-danger chances against per 60 mins")
+
+ggplot(data=defensemen_data, mapping=aes(Def_Zone_Start_Pct, GF1)) + geom_point(color='red', alpha=0.5) + geom_smooth(method='lm', se=FALSE, color='green') + labs(title="Goals-for % vs. Defensive zone start %", x = "Defensive zone start %", y = "Goals-for %")
+ 
+ggplot(data=defensemen_data, mapping=aes(Def_Zone_Start_Pct, xGA)) + geom_point(color='red', alpha=0.5) + geom_smooth(method='lm', se=FALSE, color='green') + labs(title="Expected goals against vs. Defensive zone start %", x = "Defensive zone start %", y = "Expected goals against")
+
+ggplot(data=defensemen_data, mapping=aes(Def_Zone_Start_Pct, xGF)) + geom_point(color='red', alpha=0.5) + geom_smooth(method='lm', se=FALSE, color='green') + labs(title="Expected goals for % vs. Defensive zone start %", x = "Defensive zone start %", y = "Expected goals for %")
+
+ggplot(data=defensemen_data, mapping=aes(Def_Zone_Start_Pct, Giveaways_60)) + geom_point(color='red', alpha=0.5) + geom_smooth(method='lm', se=FALSE, color='green') + labs(title="Giveaways per 60 mins vs. Defensive zone start %", x = "Defensive zone start %", y = "Giveaways per 60 mins")
+
+ggplot(data=defensemen_data, mapping=aes(Def_Zone_Start_Pct, HDCF1)) + geom_point(color='red', alpha=0.5) + geom_smooth(method='lm', se=FALSE, color='green') + labs(title="High-danger chances for % vs. Defensive zone start %", x = "Defensive zone start %", y = "High danger chances for %")
+
+ggplot(data=defensemen_data, mapping=aes(Def_Zone_Start_Pct, SF_60)) + geom_point(color='red', alpha=0.5) + geom_smooth(method='lm', se=FALSE, color='green') + labs(title="Shots for per 60 mins vs. Defensive zone start %", x = "Defensive zone start %", y = "Shots for per 60 mins")
+
+ggplot(data=defensemen_data, mapping=aes(Def_Zone_Start_Pct, SA_60)) + geom_point(color='red', alpha=0.5) + geom_smooth(method='lm', se=FALSE, color='green') + labs(title="Shots against per 60 mins vs. Defensive zone start %", x = "Defensive zone start %", y = "Shots against per 60 mins")
+
+ggplot(data=defensemen_data, mapping=aes(Def_Zone_Start_Pct, Shots_Blocked_60)) + geom_point(color='red', alpha=0.5) + geom_smooth(method='lm', se=FALSE, color='green') + labs(title="Shots blocked per 60 mins vs. Defensive zone start %", x = "Defensive zone start %", y = "Shots against per 60 mins")
+
+ggplot(data=defensemen_data, mapping=aes(Def_Zone_Start_Pct, GF_60)) + geom_point(color='red', alpha=0.5) + geom_smooth(method='lm', se=FALSE, color='green') + labs(title="Goals for per 60 mins vs. Defensive zone start %", x = "Defensive zone start %", y = "Goals for per 60 mins")
+
+ggplot(data=defensemen_data, mapping=aes(Def_Zone_Start_Pct, Takeaways_60)) + geom_point(color='red', alpha=0.5) + geom_smooth(method='lm', se=FALSE, color='green') + labs(title="Takeaways per 60 mins vs. Defensive zone start %", x = "Defensive zone start %", y = "Takeaways per 60 mins")
+
+ggplot(data=defensemen_data, mapping=aes(Def_Zone_Start_Pct, GA_60)) + geom_point(color='red', alpha=0.5) + geom_smooth(method='lm', se=FALSE, color='green') + labs(title="Goals against per 60 mins vs. Defensive zone start %", x = "Defensive zone start %", y = "Goals against per 60 mins")
+
+```
+
+
+
+# Effect size of defensive zone start percentage
+
+As made evident by the plots, a player's defensive zone start percentage has a significant impact on several important metrics. In order to determine how to adjust the effect of these metrics on the final rankings, I obtained the 
+coefficients and associated p-value for the effect of defensive zone start percentage on each metric. 
+
+``` {r, warning=FALSE, message=FALSE}
+
+summary(lm(CF1 ~ Def_Zone_Start_Pct, data=defensemen_data))
+summary(lm(SA_60 ~ Def_Zone_Start_Pct, data=defensemen_data))
+summary(lm(xGA ~ Def_Zone_Start_Pct, data=defensemen_data))
+summary(lm(HDCA_60 ~ Def_Zone_Start_Pct, data=defensemen_data))
+summary(lm(GF1 ~ Def_Zone_Start_Pct, data=defensemen_data))
+summary(lm(xGF ~ Def_Zone_Start_Pct, data=defensemen_data))
+summary(lm(Giveaways_60 ~ Def_Zone_Start_Pct, data=defensemen_data))
+summary(lm(HDCF1 ~ Def_Zone_Start_Pct, data=defensemen_data))
+summary(lm(Shots_Blocked_60 ~ Def_Zone_Start_Pct, data=defensemen_data))
+summary(lm(SF_60 ~ Def_Zone_Start_Pct, data=defensemen_data))
+summary(lm(GF_60 ~ Def_Zone_Start_Pct, data=defensemen_data))
+summary(lm(Takeaways_60 ~ Def_Zone_Start_Pct, data=defensemen_data))
+summary(lm(GA_60 ~ Def_Zone_Start_Pct, data=defensemen_data))
+
+
+```
+# Adjusting the impact of metrics on player score
+
+Since the effect of defensive zone start percentage was not statistically significant for the metrics of giveaways and takeaways, I did not adjust their impact on each player's score. For the other metrics, I adjusted based on the value of the R-squared statistic for each model. 
+
+For desirable metrics that tend to decrease as defensive zone start percentage increases, I increased them depending on how large the R-squared value was for that metric. Similarly, I decreased the size of undesirable metrics that increased as defensive zone start percentage increased, again, depending on the size of the R-squared value. I also changed the percentage by which each metric was increased or decreased based on whether a player had between 50 and 60 percent defensive zone starts, or above 60 percent defensive zone starts. Below is a table illustrating my scheme:
+
+
+``` {r, warning=FALSE, message=FALSE}
+
+table = data.frame(dZSpercent = c( ">50%", ">60%" ),
+                   small.effect = c("10% change", "20% change"),
+                   medium.effect = c("20% change", "30% change"),
+                   large.effect = c("30% change", "40% change"))
+
+knitr::kable(table, "simple")
+
+
+```
+
+
+After assigning an aggregate score to every pair of defensemen in the NHL, the pairs that actually exist were extracted and ordered in descending order by score. The top 25 pairs are displayed below:
+
+``` {r, warning=FALSE, message=FALSE}
+
+ranking = read_csv("pairs_with_scores.csv")
+
+knitr::kable(head(ranking, 25), "simple")
+
+
+
+```
+
+
+Below is a rudimentary visualization of the dispersion of scores for each defensive pair in the league. 
+
+
+``` {r, warning=FALSE, message=FALSE}
+
+# score visualizations 
+
+ggplot(ranking, aes(pair, score)) + geom_point(color= 'blue', alpha=0.6) + labs(title="Defensive pairs by score") + theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+
+```
+
+
+# Summary and Reflections
+
+As I had initially suspected, the impact of a defenseman's percentage of starts in their own zone had significant statistical impact on their respective metrics. Using this revelation, I was able to discover a more accurate and fair way to evaluate defensemen, by compensating for these adverse effects. Some defensive pairs that were already renowned for their offensive output, such as Mackenzie Weegar & Gustav Forsling, should actually be held in even higher esteem for their defensive performance: Their defensive metrics are actually quite favourable considering how much time they spend being forced to defend instead of being on the attack. 
+
+In hindsight, there are several things I would have done differently, but this is still encouraging, because it opens the door to further analysis on this topic. 
+
+It would be interesting to analyse the distribution of high-scoring and low-scoring pairs by team. Since I removed the team column early in the data cleaning process, I neglected to use it in any of my investigations. Additionally, my scheme was rather arbitrary at times, especially in the metrics I chose to include in each defenseman's score. While the metrics I chose were objectively valuable, there are no doubt many others that could be used to measure a defenseman's value. It would be an interesting experiment to conduct the same analysis using different metrics, and then compare the resulting rankings. 
