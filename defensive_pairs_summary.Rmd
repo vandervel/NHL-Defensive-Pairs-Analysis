@@ -171,7 +171,7 @@ ggplot(ranking, aes(pair, score)) + geom_point(color= 'blue', alpha=0.6) + labs(
 
 # Summary and Reflections
 
-As I had initially suspected, a high defensive zone start percentage had a significant statistical impact on their respective metrics. Using this revelation, I was able to discover a more accurate and fair way to evaluate defensemen, by compensating for these adverse effects. Some defensive pairs that were already renowned for their offensive output, such as Mackenzie Weegar & Gustav Forsling, should actually be held in even higher esteem for their defensive performance: Their defensive metrics are actually quite favourable considering how much time they spend being forced to defend instead of being on the attack. 
+As I had initially suspected, a high defensive zone start percentage had a significant statistical impact on important metrics for defensemen. Using this revelation, I was able to discover a more accurate and fair way to evaluate defensemen, by compensating for these adverse effects. Some defensive pairs that were already renowned for their offensive output, such as Mackenzie Weegar & Gustav Forsling, should actually be held in even higher esteem for their defensive performance: Their defensive metrics are actually quite favourable considering how much time they spend being forced to defend instead of being on the attack. 
 
 In hindsight, there are several things I would have done differently, but this is still encouraging, because it opens the door to further analysis on this topic. 
 
