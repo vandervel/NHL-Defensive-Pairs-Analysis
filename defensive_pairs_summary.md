@@ -94,25 +94,25 @@ ggplot(data=defensemen_data, mapping=aes(Def_Zone_Start_Pct, HDCA_60)) + geom_po
 
 ggplot(data=defensemen_data, mapping=aes(Def_Zone_Start_Pct, GF1)) + geom_point(color='red', alpha=0.5) + geom_smooth(method='lm', se=FALSE, color='green') + labs(title="Goals-for % vs. Defensive zone start %", x = "Defensive zone start %", y = "Goals-for %")
  
-ggplot(data=defensemen_data, mapping=aes(Def_Zone_Start_Pct, xGA)) + geom_point(color='red', alpha=0.5) + geom_smooth(method='lm', se=FALSE, color='green') + labs(title="Expected goals against vs. Defensive zone start %", x = "Defensive zone start %", y = "Expected goals against")
+ggplot(data=defensemen_data, mapping=aes(Def_Zone_Start_Pct, xGA)) + geom_point(color='red', alpha=0.5) + geom_smooth(method='lm', se=FALSE, color='green') + labs(title="Expected goals-against vs. Defensive zone start %", x = "Defensive zone start %", y = "Expected goals-against")
 
-ggplot(data=defensemen_data, mapping=aes(Def_Zone_Start_Pct, xGF)) + geom_point(color='red', alpha=0.5) + geom_smooth(method='lm', se=FALSE, color='green') + labs(title="Expected goals for % vs. Defensive zone start %", x = "Defensive zone start %", y = "Expected goals for %")
+ggplot(data=defensemen_data, mapping=aes(Def_Zone_Start_Pct, xGF)) + geom_point(color='red', alpha=0.5) + geom_smooth(method='lm', se=FALSE, color='green') + labs(title="Expected goals-for % vs. Defensive zone start %", x = "Defensive zone start %", y = "Expected goals-for %")
 
 ggplot(data=defensemen_data, mapping=aes(Def_Zone_Start_Pct, Giveaways_60)) + geom_point(color='red', alpha=0.5) + geom_smooth(method='lm', se=FALSE, color='green') + labs(title="Giveaways per 60 mins vs. Defensive zone start %", x = "Defensive zone start %", y = "Giveaways per 60 mins")
 
 ggplot(data=defensemen_data, mapping=aes(Def_Zone_Start_Pct, HDCF1)) + geom_point(color='red', alpha=0.5) + geom_smooth(method='lm', se=FALSE, color='green') + labs(title="High-danger chances for % vs. Defensive zone start %", x = "Defensive zone start %", y = "High danger chances for %")
 
-ggplot(data=defensemen_data, mapping=aes(Def_Zone_Start_Pct, SF_60)) + geom_point(color='red', alpha=0.5) + geom_smooth(method='lm', se=FALSE, color='green') + labs(title="Shots for per 60 mins vs. Defensive zone start %", x = "Defensive zone start %", y = "Shots for per 60 mins")
+ggplot(data=defensemen_data, mapping=aes(Def_Zone_Start_Pct, SF_60)) + geom_point(color='red', alpha=0.5) + geom_smooth(method='lm', se=FALSE, color='green') + labs(title="Shots-for per 60 mins vs. Defensive zone start %", x = "Defensive zone start %", y = "Shots-for per 60 mins")
 
-ggplot(data=defensemen_data, mapping=aes(Def_Zone_Start_Pct, SA_60)) + geom_point(color='red', alpha=0.5) + geom_smooth(method='lm', se=FALSE, color='green') + labs(title="Shots against per 60 mins vs. Defensive zone start %", x = "Defensive zone start %", y = "Shots against per 60 mins")
+ggplot(data=defensemen_data, mapping=aes(Def_Zone_Start_Pct, SA_60)) + geom_point(color='red', alpha=0.5) + geom_smooth(method='lm', se=FALSE, color='green') + labs(title="Shots-against per 60 mins vs. Defensive zone start %", x = "Defensive zone start %", y = "Shots-against per 60 mins")
 
-ggplot(data=defensemen_data, mapping=aes(Def_Zone_Start_Pct, Shots_Blocked_60)) + geom_point(color='red', alpha=0.5) + geom_smooth(method='lm', se=FALSE, color='green') + labs(title="Shots blocked per 60 mins vs. Defensive zone start %", x = "Defensive zone start %", y = "Shots against per 60 mins")
+ggplot(data=defensemen_data, mapping=aes(Def_Zone_Start_Pct, Shots_Blocked_60)) + geom_point(color='red', alpha=0.5) + geom_smooth(method='lm', se=FALSE, color='green') + labs(title="Shots blocked per 60 mins vs. Defensive zone start %", x = "Defensive zone start %", y = "Shots blocked per 60 mins")
 
-ggplot(data=defensemen_data, mapping=aes(Def_Zone_Start_Pct, GF_60)) + geom_point(color='red', alpha=0.5) + geom_smooth(method='lm', se=FALSE, color='green') + labs(title="Goals for per 60 mins vs. Defensive zone start %", x = "Defensive zone start %", y = "Goals for per 60 mins")
+ggplot(data=defensemen_data, mapping=aes(Def_Zone_Start_Pct, GF_60)) + geom_point(color='red', alpha=0.5) + geom_smooth(method='lm', se=FALSE, color='green') + labs(title="Goals-for per 60 mins vs. Defensive zone start %", x = "Defensive zone start %", y = "Goals-for per 60 mins")
 
 ggplot(data=defensemen_data, mapping=aes(Def_Zone_Start_Pct, Takeaways_60)) + geom_point(color='red', alpha=0.5) + geom_smooth(method='lm', se=FALSE, color='green') + labs(title="Takeaways per 60 mins vs. Defensive zone start %", x = "Defensive zone start %", y = "Takeaways per 60 mins")
 
-ggplot(data=defensemen_data, mapping=aes(Def_Zone_Start_Pct, GA_60)) + geom_point(color='red', alpha=0.5) + geom_smooth(method='lm', se=FALSE, color='green') + labs(title="Goals against per 60 mins vs. Defensive zone start %", x = "Defensive zone start %", y = "Goals against per 60 mins")
+ggplot(data=defensemen_data, mapping=aes(Def_Zone_Start_Pct, GA_60)) + geom_point(color='red', alpha=0.5) + geom_smooth(method='lm', se=FALSE, color='green') + labs(title="Goals-against per 60 mins vs. Defensive zone start %", x = "Defensive zone start %", y = "Goals-against per 60 mins")
 ```
 
 <img src="defensive_pairs_summary_files/figure-gfm/figures-side-1.png" width="50%" /><img src="defensive_pairs_summary_files/figure-gfm/figures-side-2.png" width="50%" /><img src="defensive_pairs_summary_files/figure-gfm/figures-side-3.png" width="50%" /><img src="defensive_pairs_summary_files/figure-gfm/figures-side-4.png" width="50%" /><img src="defensive_pairs_summary_files/figure-gfm/figures-side-5.png" width="50%" /><img src="defensive_pairs_summary_files/figure-gfm/figures-side-6.png" width="50%" /><img src="defensive_pairs_summary_files/figure-gfm/figures-side-7.png" width="50%" /><img src="defensive_pairs_summary_files/figure-gfm/figures-side-8.png" width="50%" /><img src="defensive_pairs_summary_files/figure-gfm/figures-side-9.png" width="50%" /><img src="defensive_pairs_summary_files/figure-gfm/figures-side-10.png" width="50%" /><img src="defensive_pairs_summary_files/figure-gfm/figures-side-11.png" width="50%" /><img src="defensive_pairs_summary_files/figure-gfm/figures-side-12.png" width="50%" /><img src="defensive_pairs_summary_files/figure-gfm/figures-side-13.png" width="50%" />
