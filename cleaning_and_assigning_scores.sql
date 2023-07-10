@@ -111,7 +111,7 @@ alter table IndividualCounts drop column Faceoffs_Lost
 alter table IndividualCounts drop column Team
 
 /* Create new table of per-60-minutes-rates for all defensemen with at least 60 total minutes played, at least 10 minutes per game,
-and with at least 20 total games played. This will be the final dataset for individual defensemen */
+and with at least 20 total games played. The final dataset will eventually be comprised of players that meet these basic thresholds. */
 
 select * into DefensemanRates from
 (select i.*
@@ -157,7 +157,7 @@ from DefensemanCounts C inner join DefensemanRates R on C.Player = R.Player
 select * from DefensemanCounts_Rates where Player like 'Quin%'
 select * from DefensivePairs where Player_2 like 'Quin%'
 
---Drop redundant column of Position (All players in dataset are defensemen anyway)
+--Drop redundant column of Position, as by this point all players in the dataset are defensemen. 
 
 alter table DefensemanCounts_Rates drop column Position
 
@@ -169,6 +169,8 @@ update DefensemanCounts_Rates
 set Player = 'Quintin Hughes'
 where Player like 'Quin%'
 
+
+/* Obtaining the data type of the "Shots" data feature */ 
 
 select DATA_TYPE
 from INFORMATION_SCHEMA.COLUMNS
@@ -182,7 +184,9 @@ order by 5 desc, 1, 2, 3, 4
 /* Percentage of players with more than 100 shots that have
 high danger chances created greater than 20. */
 
-/* Begin to investigate the effect of zone starts on player statistics */
+/* Begin to investigate the effect of zone starts on player statistics. This an integral part of our analysis.
+My original hypothesis was that players who have more defensive starts (and thefore spend more time in the defensive
+zone) will have  negatively skewed positive metrics. */
 
 
 /* Append offensive zone start statistics from defensive pairs data set to 
@@ -293,9 +297,15 @@ select (( select max(Def_Start_Pct) from (select top 50 percent Def_Start_Pct fr
 + (select min(Def_Start_Pct) from (select top 50 percent Def_Start_Pct from Final_Defensemen_Data order by Def_Start_Pct) as top_half)
 ) / 2 as median
 
+/* The series of select statements below are to provide easy access to each dataset while working on the analysis */
+
 select * from Final_Defensemen_Data
 select * from on_ice_counts
 select * from on_ice_rates
+
+/* Testing whether the DefensivePairs dataset includes defensemen in their rightful position based on whether they shoot right or left.
+This statement also tests whether players can be included under both Player and Player_2 columns, depending on the pair. */
+
 select * from DefensivePairs where Player = 'Aaron Ekblad' or Player_2 = 'Aaron Ekblad'
 select * from IndividualPlayerRates
 select * from DefensemanCounts_Rates
@@ -360,14 +370,14 @@ where a.Player != b.Player) as pairs_with_scores
 
 
 
-/* get ranking of pairs by their respective unadjusted scores */
+/* Get ranking of pairs by their respective unadjusted scores */
 
 select * from pairs_with_scores_unadj
 where pair in
 (select concat(Player, ' ', Player_2) from DefensivePairs)
 order by score desc
 
-/* get ranking of pairs by their respective adjusted score (players with over 50% of starts in 
+/* Get ranking of pairs by their respective adjusted score (players with over 50% of starts in 
 the defensive zone have the impact of their negative stats reduced by 0.6, and players
 with over 60% of starts in the defensive zone have the impact of their negative
 stats reduced by 0.5) */
